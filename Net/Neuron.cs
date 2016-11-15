@@ -30,8 +30,8 @@ namespace Net
         public IEnumerable<double> WeightsVector => InputConnections.Select(c => c.Weight.Value);
 
         public Neuron()
+            : this(new SigmoidFunction())
         {
-            this.TransferFunction = new SigmoidFunction();
         }
         
         public Neuron(ITransferFunction transferFunction)
@@ -61,21 +61,10 @@ namespace Net
             Neuron fromNeuron = connection.Source;
             fromNeuron.AddOutputConnection(connection);
         }
-        public void AddInputConnection(Neuron fromNeuron)
-        {
-            Connection connection = new Connection(fromNeuron, this);
-            this.AddInputConnection(connection);
-        }
 
         public void AddInputConnection(Neuron fromNeuron, double min, double max)
         {
             Connection connection = new Connection(fromNeuron, this, min, max);
-            this.AddInputConnection(connection);
-        }
-        
-        public void AddInputConnection(Neuron fromNeuron, Weight weight)
-        {
-            Connection connection = new Connection(fromNeuron, this, weight);
             this.AddInputConnection(connection);
         }
         
