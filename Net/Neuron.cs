@@ -8,9 +8,9 @@ namespace Net
 {
     public class Neuron
     {
-        protected IList<Connection> InputConnections { get; set; } = new List<Connection>();
+        public IList<Connection> InputConnections { get; set; } = new List<Connection>();
 
-        protected IList<Connection> OutConnections { get; set; } = new List<Connection>();
+        public IList<Connection> OutConnections { get; set; } = new List<Connection>();
 
         public double NetInput { get; set; }
 
@@ -21,8 +21,6 @@ namespace Net
         public ITransferFunction TransferFunction { get; set; }
 
         public bool HasInputConnections => this.InputConnections.Count > 0;
-
-        public IEnumerator<Connection> GetInputsEnumerator() => this.InputConnections.GetEnumerator();
 
         public Connection GetConnectionFrom(Neuron fromNeuron)
             => InputConnections.FirstOrDefault(c => c.Source == fromNeuron);
@@ -39,11 +37,11 @@ namespace Net
             this.TransferFunction = transferFunction;
         }
         
-        public void Calculate()
+        public void Process()
         {
             if (this.HasInputConnections)
             {
-                this.NetInput = InputConnections.Sum(conn => conn.Weight.Value * conn.Source.Output );
+                this.NetInput = InputConnections.Sum(connection => connection.Weight.Value * connection.Source.Output );
             }
 
             this.Output = this.TransferFunction.Calculate(this.NetInput);
@@ -58,8 +56,7 @@ namespace Net
         public void AddInputConnection(Connection connection)
         {
             this.InputConnections.Add(connection);
-            Neuron fromNeuron = connection.Source;
-            fromNeuron.AddOutputConnection(connection);
+            connection.Source.AddOutputConnection(connection);
         }
 
         public void AddInputConnection(Neuron fromNeuron, double min, double max)
@@ -79,6 +76,13 @@ namespace Net
             {
                 connection.Weight.Randomize(min, max);
             }
+        }
+
+        public void DeleteConnectionFrom(Neuron prevNeuron)
+        {
+            var connection = InputConnections.FirstOrDefault(n => n.Source == prevNeuron);
+            connection?.Source.OutConnections.Remove(connection);
+            connection?.Destination.InputConnections.Remove(connection);
         }
     }
 }

@@ -2,9 +2,11 @@
 
 namespace Net
 {
-    class Layer
+    public class Layer
     {
         public IList<Neuron> Neurons { get; set; }
+
+        public int Count => Neurons.Count;
 
         public Layer(int numOfNeurons, ITransferFunction transferFun)
         {
@@ -26,6 +28,7 @@ namespace Net
             {
                 foreach (var neuron in Neurons)
                 {
+                    neuron.DeleteConnectionFrom(prevNeuron);
                     neuron.AddInputConnection(prevNeuron, minWeight, maxWeight);
                 }
             }
