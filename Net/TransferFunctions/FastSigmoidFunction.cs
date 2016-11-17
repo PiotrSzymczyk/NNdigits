@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Net
+namespace Net.TransferFunctions
 {
     public class FastSigmoidFunction : ITransferFunction
     {

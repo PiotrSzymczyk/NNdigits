@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Net.Base;
+using Net.TransferFunctions;
 
 namespace Net
 {

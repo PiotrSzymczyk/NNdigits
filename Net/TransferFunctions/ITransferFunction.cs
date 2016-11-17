@@ -1,4 +1,4 @@
-﻿namespace Net
+﻿namespace Net.TransferFunctions
 {
     public interface ITransferFunction
     {

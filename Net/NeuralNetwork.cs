@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Net.Base;
+using Net.TransferFunctions;
 
 namespace Net
 {
@@ -84,7 +86,7 @@ namespace Net
             var patternError = new List<double>();
             for (int index = 0; index < OutputLayer.Neurons.Count; index++)
             {
-                Neuron neuron = OutputLayer.Neurons[index];
+                Base.Neuron neuron = OutputLayer.Neurons[index];
                 patternError.Add(expectedOutput[index] - neuron.Output);
             }
             return patternError;
@@ -100,7 +102,7 @@ namespace Net
         
         private void SetOutputLayerNeuronsErrors(IEnumerator<double> patternError)
         {
-            foreach (Neuron neuron in this.OutputLayer.Neurons)
+            foreach (Base.Neuron neuron in this.OutputLayer.Neurons)
             {
                 var outputError = patternError.Current;
                 neuron.Error = outputError != 0 ? outputError*GetDerivative(neuron) : 0;
@@ -133,7 +135,7 @@ namespace Net
             }
         }
 
-        private void UpdateNeuronWeights(Neuron neuron)
+        private void UpdateNeuronWeights(Base.Neuron neuron)
         {
             foreach (Connection connection in neuron.InputConnections)
             {
@@ -153,7 +155,7 @@ namespace Net
             }
         }
 
-        private double GetDerivative(Neuron neuron)
+        private double GetDerivative(Base.Neuron neuron)
         {
             var transferFunction = neuron.TransferFunction;
             var netInput = neuron.NetInput;
