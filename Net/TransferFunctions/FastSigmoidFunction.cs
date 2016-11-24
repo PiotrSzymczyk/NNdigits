@@ -4,7 +4,7 @@ namespace Net.TransferFunctions
 {
     public class FastSigmoidFunction : ITransferFunction
     {
-        public double Beta { get; set; }
+        public double Beta { get; set; } =  0.5;
         public double Calculate(double netInput)
         {
             return Beta*netInput/(1 + Math.Abs(Beta*netInput));

@@ -5,7 +5,7 @@ namespace Net
 {
     public class TrainingElement
     {
-        public IList<double> Input;
+        public IList<byte> Input;
 
         public IList<int> ExpectedOutput;
     }

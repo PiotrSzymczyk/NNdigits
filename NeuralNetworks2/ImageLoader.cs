@@ -12,7 +12,6 @@ namespace NeuralNetworks2
     public static class ImageLoader
     {
         const string ImageFormatRegex = "\\.png$";
-        static ImageConverter converter = new ImageConverter();
 
         public static Bitmap LoadImage(string path)
         {
@@ -54,9 +53,9 @@ namespace NeuralNetworks2
             return result;
         }
         
-        public static IList<double> ParseImageToVector(Bitmap bmp)
+        public static IList<byte> ParseImageToVector(Bitmap bmp)
         {
-            return BitmapToByteArray(bmp).Select(value => (double) value).ToList();
+            return BitmapToByteArray(bmp).ToList();
         }
 
         public static byte[] BitmapToByteArray(Bitmap bmp)

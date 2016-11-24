@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 using Net.Base;
 using Net.TransferFunctions;
 
@@ -19,18 +20,23 @@ namespace Net
 
         public Layer OutputLayer => Layers.Last();
 
-        public IList<Layer> HiddenLayers => (IList<Layer>) Layers.Except(new[]
+        public IList<Layer> HiddenLayers => Layers.Except(new[]
         {
             InputLayer,
             OutputLayer
-        });
+        }).ToList();
 
         public IEnumerable<double> PaternError => OutputLayer.Neurons.Select(neuron => neuron.Error);
 
         public double TotalNetworkError { get; set; }
 
+        public int Output
+            => OutputLayer.Neurons.IndexOf(
+                OutputLayer.Neurons.First(neuron => neuron.Output == OutputLayer.Neurons.Max(n => n.Output)));
+
         public NeuralNetwork(int numOfInputs, int numOfHiddenLayerNeurons, int numOfOutputs, ITransferFunction transferFun, double minWeight, double maxWeight)
         {
+            Layers = new List<Layer>();
             Layers.Add(new Layer(numOfInputs, transferFun));
             Layers.Add(new Layer(numOfHiddenLayerNeurons, transferFun));
             Layers.Add(new Layer(numOfOutputs, transferFun));
@@ -46,31 +52,68 @@ namespace Net
         {
         }
 
-        protected void LearnPattern(TrainingElement trainingElement)
+        public void Process(IList<byte> inputs)
         {
-            IEnumerable<double> input = trainingElement.Input.ToArray();
-            this.SetInput(input);
-            this.Calculate();
-            var patternError = this.GetPatternError(trainingElement.ExpectedOutput);
-            this.UpdateNetwork(patternError.ToList());
+            this.SetInput(inputs);
+            this.Process();
         }
 
-        private void SetInput(IEnumerable<double> input)
+        public double Validate(IList<TrainingElement> testSet)
+        {
+            double hits = 0;
+            foreach (var test in testSet)
+            {
+                this.SetInput(test.Input);
+                this.Process();
+                if (Output == test.ExpectedOutput.IndexOf(1)) hits++;
+            }
+            return hits/testSet.Count;
+        }
+
+        public void Learn(IList<TrainingElement> trainingSet)
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                DoLearningEpoch(trainingSet);
+            }
+        }
+
+        public void DoLearningEpoch(IList<TrainingElement> trainingSet)
+        {
+            this.TotalNetworkError = 0d;
+
+            var iterator = trainingSet.GetEnumerator();
+            while (iterator.MoveNext())
+            {
+                var trainingElement = iterator.Current;
+                this.LearnPattern(trainingElement);
+            }
+        }
+
+        public void LearnPattern(TrainingElement trainingElement)
+        {
+            this.SetInput(trainingElement.Input);
+            this.Process();
+            this.UpdateNetwork(this.GetPatternError(trainingElement.ExpectedOutput));
+        }
+
+        private void SetInput(IEnumerable<byte> input)
         {
             if (input.Count() != InputLayer.Count)
                 throw new Exception("Input vector size does not match network input dimension!");
 
             using (var inputs = input.GetEnumerator())
             {
-                for (int index = 0; index < InputLayer.Count; index++, inputs.MoveNext())
+                for (int index = 0; index < InputLayer.Count; index++)
                 {
-                    InputLayer.Neurons[index].NetInput = inputs.Current;
+                    inputs.MoveNext();
+                    InputLayer.Neurons[index].Output = inputs.Current;
                 }
             }
             
         }
 
-        private void Calculate()
+        private void Process()
         {
             for (int layer = 1; layer < Layers.Count; layer++)
             {
@@ -81,12 +124,12 @@ namespace Net
             }
         }
 
-        private IEnumerable<double> GetPatternError(IList<int> expectedOutput)
+        private IList<double> GetPatternError(IList<int> expectedOutput)
         {
             var patternError = new List<double>();
             for (int index = 0; index < OutputLayer.Neurons.Count; index++)
             {
-                Base.Neuron neuron = OutputLayer.Neurons[index];
+                Neuron neuron = OutputLayer.Neurons[index];
                 patternError.Add(expectedOutput[index] - neuron.Output);
             }
             return patternError;
@@ -102,7 +145,7 @@ namespace Net
         
         private void SetOutputLayerNeuronsErrors(IEnumerator<double> patternError)
         {
-            foreach (Base.Neuron neuron in this.OutputLayer.Neurons)
+            foreach (Neuron neuron in this.OutputLayer.Neurons)
             {
                 var outputError = patternError.Current;
                 neuron.Error = outputError != 0 ? outputError*GetDerivative(neuron) : 0;
@@ -135,7 +178,7 @@ namespace Net
             }
         }
 
-        private void UpdateNeuronWeights(Base.Neuron neuron)
+        private void UpdateNeuronWeights(Neuron neuron)
         {
             foreach (Connection connection in neuron.InputConnections)
             {
@@ -155,11 +198,25 @@ namespace Net
             }
         }
 
-        private double GetDerivative(Base.Neuron neuron)
+        private double GetDerivative(Neuron neuron)
         {
             var transferFunction = neuron.TransferFunction;
             var netInput = neuron.NetInput;
             return transferFunction.CalculateDerivative(netInput);
+        }
+
+        public override string ToString()
+        {
+            string net = "";
+            foreach (var layer in Layers)
+            {
+                net += "Layer\n";
+                foreach (var neuron in layer.Neurons)
+                {
+                    net += $"\t{neuron}\n";
+                }
+            }
+            return net;
         }
     }
 }

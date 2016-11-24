@@ -1,1 +1,16 @@
 C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\bin\Debug\NeuralNetworks2.exe.config
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\bin\Debug\NeuralNetworks2.exe
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\bin\Debug\NeuralNetworks2.pdb
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\bin\Debug\Net.dll
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\bin\Debug\Net.pdb
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\obj\Debug\NeuralNetworks2.csprojResolveAssemblyReference.cache
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\obj\Debug\MainWindow.g.cs
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\obj\Debug\App.g.cs
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\obj\Debug\NeuralNetworks2_MarkupCompile.cache
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\obj\Debug\NeuralNetworks2_MarkupCompile.lref
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\obj\Debug\MainWindow.baml
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\obj\Debug\NeuralNetworks2.g.resources
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\obj\Debug\NeuralNetworks2.Properties.Resources.resources
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\obj\Debug\NeuralNetworks2.csproj.GenerateResource.Cache
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\obj\Debug\NeuralNetworks2.exe
+C:\Users\piotrek\Documents\Visual Studio 2015\Projects\NeuralNetworks2\NeuralNetworks2\obj\Debug\NeuralNetworks2.pdb

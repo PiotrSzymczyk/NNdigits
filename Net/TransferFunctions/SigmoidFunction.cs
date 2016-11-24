@@ -4,7 +4,7 @@ namespace Net.TransferFunctions
 {
     public class SigmoidFunction : ITransferFunction
     {
-        public double Beta { get; set; }
+        public double Beta { get; set; } = 0.5;
 
         public double Calculate(double netInput)
         {

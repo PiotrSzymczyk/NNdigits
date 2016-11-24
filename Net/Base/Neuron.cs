@@ -82,5 +82,10 @@ namespace Net.Base
             connection?.Source.OutConnections.Remove(connection);
             connection?.Destination.InputConnections.Remove(connection);
         }
+
+        public override string ToString()
+        {
+            return $"N(i:{NetInput}; o:{Output})";
+        }
     }
 }
