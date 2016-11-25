@@ -18,5 +18,13 @@ namespace Net
                 return generator.NextDouble();
             }
         }
+
+        public static int Next(int max)
+        {
+            lock (generator)
+            {
+                return generator.Next(max);
+            }
+        }
     }
 }

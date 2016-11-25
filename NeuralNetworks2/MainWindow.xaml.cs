@@ -70,6 +70,7 @@ namespace NeuralNetworks2
             {
                 isRunning = true;
                 paused = false;
+                BlockSetupUI(true);
                 bProcess.IsEnabled = false;
                 bLearn.Content = "Stop";
 
@@ -85,6 +86,7 @@ namespace NeuralNetworks2
                     return true;
                 });
 
+                BlockSetupUI(false);
                 bLearn.Content = "Learn";
                 isRunning = false;
             }
@@ -100,6 +102,16 @@ namespace NeuralNetworks2
                 bProcess.IsEnabled = true;
                 bLearn.Content = "Continue";
             }
+        }
+
+        private void BlockSetupUI(bool disable)
+        {
+            tbInputCount.IsEnabled = !disable;
+            tbHiddenCount.IsEnabled = !disable;
+            tbOutputCount.IsEnabled = !disable;
+            cbTransferFunction.IsEnabled = !disable;
+            tbWeightsRange.IsEnabled = !disable;
+            tbBeta.IsEnabled = !disable;
         }
 
         private void InitializeNet()
@@ -126,7 +138,7 @@ namespace NeuralNetworks2
 
         public void Teach(IList<TrainingElement> trainingSet, double precision)
         {
-            for (int i = 0; i < net.MaxNumberOfEpoch; i++)
+            for (int i = 0; i < net.MaxNumberOfEpoch && isRunning; i++)
             {
                 net.DoLearningEpoch(trainingSet.OrderBy(val => RandomGenerator.NextDouble()).ToList());
                 UpdateGUI(i, precision);
@@ -150,7 +162,8 @@ namespace NeuralNetworks2
         {
             this.InvokeIfRequired(val => tbCurrentEpoch.Text = val.ToString(), numOfEpoch);
             this.InvokeIfRequired(val => tbTotalNetworkError.Text = val, net.TotalNetworkError.ToString());
-            this.InvokeIfRequired(val => progress.Value = val, 100/Math.Log(precision, net.TotalNetworkError));
+            this.InvokeIfRequired(val => progress.Value = val,
+                net.TotalNetworkError != 0 ? 100/Math.Log(precision, net.TotalNetworkError) : 0);
         }
 
         private void cbPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -161,13 +174,63 @@ namespace NeuralNetworks2
             {
                 if (newInputBoard[i] != inputBoard[i])
                 {
-                    int column = i%7;
-                    int row = i/7;
-                    ToggleColor((Button) buttonInputBoard.Children.Cast<UIElement>()
-                        .Single(button => Grid.GetRow(button) == row && Grid.GetColumn(button) == column));
+                    ToggleButton(i);
                 }
             }
             inputBoard = newInputBoard;
+        }
+
+        private void tbLearningRate_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (net != null)
+            {
+                net.LearningRate = double.Parse(tbLearningRate.Text);
+            }
+        }
+
+        private void tbNumOfEpoch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (net != null)
+            {
+                net.MaxNumberOfEpoch = int.Parse(tbNumOfEpoch.Text);
+            }
+        }
+
+        private void tbMomentum_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (net != null)
+            {
+                net.Momentum = double.Parse(tbMomentum.Text);
+            }
+        }
+
+        private void bReset_Click(object sender, RoutedEventArgs e)
+        {
+            isRunning = false;
+            paused = false;
+            InitializeNet();
+            bProcess.IsEnabled = true;
+            progress.Value = 0;
+            tbCurrentEpoch.Text = "0";
+            tbTotalNetworkError.Text = "0";
+        }
+
+        private void bDistort_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                ToggleButton(RandomGenerator.Next(70));
+            }
+        }
+
+        private void ToggleButton(int index)
+        {
+            var column = index % 7;
+            var row = index / 7;
+            var button = (Button) buttonInputBoard.Children.Cast<UIElement>()
+                .First(b => Grid.GetRow(b) == row && Grid.GetColumn(b) == column);
+            ToggleColor(button);
+            ToggleValue(button);
         }
     }
 }
