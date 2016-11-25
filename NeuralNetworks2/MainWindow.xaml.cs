@@ -20,6 +20,7 @@ namespace NeuralNetworks2
         private bool[] inputBoard;
         private NeuralNetwork net;
         private bool paused = false;
+        private bool isRunning = false;
 
         public IList<ITransferFunction> TransferFunctions { get; set; } = new List<ITransferFunction>
         {
@@ -63,19 +64,37 @@ namespace NeuralNetworks2
 
         private async void bLearn_Click(object sender, RoutedEventArgs e)
         {
-            InitializeNet();
-            var trainingSet = ImageLoader.LoadTrainingElementsFromDirectory(this.trainingSet.Text, int.Parse(tbOutputCount.Text));
-
-            await Task.Run(() =>
+            if (!isRunning)
             {
-                Teach(trainingSet);
-                return true;
-            });
+                isRunning = true;
+                paused = false;
+                bLearn.Content = "Stop";
 
-            UpdateGUI(1);
-            
-            
-            var testSet = ImageLoader.LoadTrainingElementsFromDirectory(this.testSet.Text, int.Parse(tbOutputCount.Text));
+                InitializeNet();
+
+                var trainingSet = ImageLoader.LoadTrainingElementsFromDirectory(this.trainingSet.Text,
+                    int.Parse(tbOutputCount.Text));
+                var precision = double.Parse(tbPrecision.Text);
+
+                await Task.Run(() =>
+                {
+                    Teach(trainingSet, precision);
+                    return true;
+                });
+
+                bLearn.Content = "Learn";
+                isRunning = false;
+            }
+            else if (paused)
+            {
+                paused = false;
+                bLearn.Content = "Pause";
+            }
+            else
+            {
+                paused = true;
+                bLearn.Content = "Continue";
+            }
         }
 
         private void InitializeNet()
@@ -97,14 +116,19 @@ namespace NeuralNetworks2
         {
             var input = inputBoard.Select(val => val ? (byte) 1 : (byte) 0).ToList();
             net.Process(input);
+            tbResult.Text = net.Output.ToString();
         }
 
-        public void Teach(IList<TrainingElement> trainingSet)
+        public void Teach(IList<TrainingElement> trainingSet, double precision)
         {
             for (int i = 0; i < net.MaxNumberOfEpoch; i++)
             {
                 net.DoLearningEpoch(trainingSet.OrderBy(val => RandomGenerator.NextDouble()).ToList());
-                //UpdateGUI(i);
+                UpdateGUI(i, precision);
+                if (net.TotalNetworkError < precision)
+                {
+                    break;
+                }
                 while (paused)
                 {
                     Thread.Sleep(1000);
@@ -112,10 +136,11 @@ namespace NeuralNetworks2
             }
         }
 
-        private void UpdateGUI(int numOfEpoch)
+        private void UpdateGUI(int numOfEpoch, double precision)
         {
-            tbCurrentEpoch.Text = numOfEpoch.ToString();
-            tbTotalNetworkError.Text = net.TotalNetworkError.ToString();
+            this.InvokeIfRequired(val => tbCurrentEpoch.Text = val.ToString(), numOfEpoch);
+            this.InvokeIfRequired(val => tbTotalNetworkError.Text = val, net.TotalNetworkError.ToString());
+            this.InvokeIfRequired(val => progress.Value = val, 100/Math.Log(precision, net.TotalNetworkError));
         }
 
         public void TeachOneEpoch(IList<TrainingElement> trainingSet)

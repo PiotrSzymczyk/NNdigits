@@ -32,7 +32,9 @@ namespace Net
 
         public virtual double TotalNetworkError
         {
-            get; set;  }
+            get { return totalNetworkError/2; }
+            set { totalNetworkError = value; }
+        }
 
         public int MaxNumberOfEpoch { get; set; } = 5000;
 
@@ -87,7 +89,7 @@ namespace Net
 
         public void DoLearningEpoch(IList<TrainingElement> trainingSet)
         {
-            this.TotalNetworkError = 0d;
+            this.totalNetworkError = 0d;
 
             using (var iterator = trainingSet.GetEnumerator())
             {
@@ -138,7 +140,7 @@ namespace Net
             this.SetOutputLayerNeuronsErrors(expectedResult);
             this.SetHiddenLayerNeuronsErrors();
             this.UpdateWeights();
-            this.TotalNetworkError += CurrNetworkError;
+            this.totalNetworkError += CurrNetworkError;
         }
         
         private void SetOutputLayerNeuronsErrors(IList<int> expectedResult)
