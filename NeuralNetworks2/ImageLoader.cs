@@ -66,8 +66,7 @@ namespace NeuralNetworks2
             {
                 for (int x = 0; x < bmp.Width; x++)
                 {
-                    Console.WriteLine(bmp.Width * y + x);
-                    result[bmp.Width * y + x] = bmp.GetPixel(x, y).R;
+                    result[bmp.Width * y + x] = (byte) (bmp.GetPixel(x, y).R < 196 ? 1 : 0);
                 }
             }
             return result;

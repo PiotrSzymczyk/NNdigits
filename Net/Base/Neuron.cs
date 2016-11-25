@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Net.TransferFunctions;
 
@@ -85,7 +86,7 @@ namespace Net.Base
 
         public override string ToString()
         {
-            return $"N(i:{NetInput}; o:{Output})";
+            return $"N(i:{Math.Round(NetInput, 2)}; o:{Math.Round(Output, 2)})";
         }
     }
 }

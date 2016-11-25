@@ -100,13 +100,14 @@
         <Button x:Name="b9x5" Grid.Row="9" Grid.Column="5" Background="White" Click="Button_Click"/>
         <Button x:Name="b9x6" Grid.Row="9" Grid.Column="6" Background="White" Click="Button_Click"/>
         <Label x:Name="label" Content="Learnig set dir:" Grid.Column="6" HorizontalAlignment="Left" Margin="75,0,-125,0" VerticalAlignment="Top" Width="100"/>
-        <TextBox x:Name="trainingSet" Grid.Column="6" HorizontalAlignment="Left" Height="23" Margin="194,2,-655,0" TextWrapping="Wrap" Text="C:\Users\piotrek\Documents\Visual Studio 2015\Projects\Datasets\Learning" VerticalAlignment="Top" Width="511"/>
+        <TextBox x:Name="trainingSet" Grid.Column="6" HorizontalAlignment="Left" Height="23" Margin="194,2,-655,0" TextWrapping="Wrap" Text="C:\Users\piotrek\Documents\Visual Studio 2015\Projects\Datasets\All" VerticalAlignment="Top" Width="511"/>
         <Label x:Name="label1" Content="Validation set dir:" Grid.Column="6" HorizontalAlignment="Left" Margin="75,32,-125,0" VerticalAlignment="Top" Width="100" Grid.RowSpan="2"/>
-        <TextBox x:Name="testSet" Grid.Column="6" HorizontalAlignment="Left" Height="23" Margin="194,34,-655,0" TextWrapping="Wrap" Text="C:\Users\piotrek\Documents\Visual Studio 2015\Projects\Datasets\Learning" VerticalAlignment="Top" Width="511" Grid.RowSpan="2"/>
+        <TextBox x:Name="testSet" Grid.Column="6" HorizontalAlignment="Left" Height="23" Margin="194,34,-655,0" TextWrapping="Wrap" Text="C:\Users\piotrek\Documents\Visual Studio 2015\Projects\Datasets\All" VerticalAlignment="Top" Width="511" Grid.RowSpan="2"/>
         <Button x:Name="bLearn" Content="Learn" Grid.Column="6" HorizontalAlignment="Left" Margin="324,19,-349,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="bLearn_Click"/>
         <Button x:Name="bProcess" Grid.ColumnSpan="5" Content="Process image" Grid.Column="1" HorizontalAlignment="Left" Height="32" Margin="0,70,0,-52" Grid.Row="9" VerticalAlignment="Top" Width="250" Click="bProcess_Click"/>
         <TextBox x:Name="output" Grid.Column="6" HorizontalAlignment="Left" Height="84" Margin="75,16,-655,0" Grid.Row="2" TextWrapping="Wrap" Text="{Binding Path=Output, ElementName=window}" VerticalAlignment="Top" Width="630" FontSize="60" Grid.RowSpan="2"/>
-        <TextBox x:Name="textBox" Grid.Column="6" HorizontalAlignment="Left" Height="251" Margin="94,17,-172,-18" Grid.Row="5" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="128" Grid.RowSpan="5"/>
+        <TextBox x:Name="textBox" Grid.Column="6" HorizontalAlignment="Left" Height="251" Margin="97,23,-175,-124" Grid.Row="7" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="128" Grid.RowSpan="3"/>
         <TextBox x:Name="textBox1" Grid.Column="6" HorizontalAlignment="Left" Height="407" Margin="279,17,-655,-124" Grid.Row="4" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="426" Grid.RowSpan="6"/>
+        <TextBox x:Name="learaningRate" Grid.Column="6" HorizontalAlignment="Left" Height="23" Margin="105,0,-175,0" Grid.Row="5" TextWrapping="Wrap" Text="0,1" VerticalAlignment="Top" Width="120"/>
     </Grid>
 </Window>

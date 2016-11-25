@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -51,13 +53,19 @@ namespace NeuralNetworks2
             }
         }
 
-        private void bLearn_Click(object sender, RoutedEventArgs e)
+        private async void bLearn_Click(object sender, RoutedEventArgs e)
         {
-            net = new NeuralNetwork(70, 15, 10, new FastSigmoidFunction());
-            net.LearningRate = 0.1;
+            net = new NeuralNetwork(70, 15, 10, new SigmoidFunction());
+            //net = new NeuralNetwork(2, 4, 2, new SigmoidFunction());
+            net.LearningRate = double.Parse(learaningRate.Text);
             var trainingSet = ImageLoader.LoadTrainingElementsFromDirectory(this.trainingSet.Text, 10);
 
-            net.Learn(trainingSet);
+            var result = await Task.Run(() =>
+            {
+                net.Learn(trainingSet);
+                return true;
+            });
+            
             
             var testSet = ImageLoader.LoadTrainingElementsFromDirectory(this.testSet.Text, 10);
             output.Text = ((int)(net.Validate(testSet)*10000)/100d).ToString();
@@ -65,25 +73,10 @@ namespace NeuralNetworks2
 
         private void bProcess_Click(object sender, RoutedEventArgs e)
         {
-            var input = inputBoard.Select(val => val ? (byte) 0 : (byte) 255).ToList();
+            var input = inputBoard.Select(val => val ? (byte) 1 : (byte) 0).ToList();
             net.Process(input);
-            this.output.Text = net.OutputLayer.Neurons.Select(n => n.Output).Aggregate("", (s, s1) => s + " " + s1);
-            textBox.Text = Img();
+            this.output.Text = net.OutputLayer.Neurons.Select(n => Math.Round(n.Output)).Aggregate("", (s, s1) => s + " " + s1);
             textBox1.Text = net.ToString();
-        }
-
-        private string Img()
-        {
-            string res = "";
-            for (int y = 0; y < 10; y++)
-            {
-                for (int x = 0; x < 7; x++)
-                {
-                    res += inputBoard[y*7 + x] ? "1" : "0";
-                }
-                res += "\n";
-            }
-            return res;
         }
     }
 }

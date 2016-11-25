@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using Net.Base;
 using Net.TransferFunctions;
@@ -26,9 +27,13 @@ namespace Net
             OutputLayer
         }).ToList();
 
-        public IEnumerable<double> PaternError => OutputLayer.Neurons.Select(neuron => neuron.Error);
+        public double CurrNetworkError => Layers.SelectMany(l => l.Neurons).Sum(neuron => neuron.Error);
 
-        public double TotalNetworkError { get; set; }
+        public virtual double TotalNetworkError { get; set; }
+
+        public int MaxNumberOfEpoch { get; set; } = 5000;
+
+        public bool Paused { get; set; } = false;
 
         public int Output
             => OutputLayer.Neurons.IndexOf(
@@ -72,9 +77,14 @@ namespace Net
 
         public void Learn(IList<TrainingElement> trainingSet)
         {
-            for (int i = 0; i < 1000; i++)
+            var rand = new Random();
+            for (int i = 0; i < MaxNumberOfEpoch; i++)
             {
-                DoLearningEpoch(trainingSet);
+                DoLearningEpoch(trainingSet.OrderBy(val => rand.Next()).ToList());
+                while (Paused)
+                {
+                    Thread.Sleep(1000);
+                }
             }
         }
 
@@ -82,11 +92,13 @@ namespace Net
         {
             this.TotalNetworkError = 0d;
 
-            var iterator = trainingSet.GetEnumerator();
-            while (iterator.MoveNext())
+            using (var iterator = trainingSet.GetEnumerator())
             {
-                var trainingElement = iterator.Current;
-                this.LearnPattern(trainingElement);
+                while (iterator.MoveNext())
+                {
+                    var trainingElement = iterator.Current;
+                    this.LearnPattern(trainingElement);
+                }
             }
         }
 
@@ -94,7 +106,7 @@ namespace Net
         {
             this.SetInput(trainingElement.Input);
             this.Process();
-            this.UpdateNetwork(this.GetPatternError(trainingElement.ExpectedOutput));
+            this.UpdateNetwork(trainingElement.ExpectedOutput);
         }
 
         private void SetInput(IEnumerable<byte> input)
@@ -124,33 +136,21 @@ namespace Net
             }
         }
 
-        private IList<double> GetPatternError(IList<int> expectedOutput)
+        private void UpdateNetwork(IList<int> expectedResult)
         {
-            var patternError = new List<double>();
-            for (int index = 0; index < OutputLayer.Neurons.Count; index++)
-            {
-                Neuron neuron = OutputLayer.Neurons[index];
-                patternError.Add(expectedOutput[index] - neuron.Output);
-            }
-            return patternError;
-        }
-
-        private void UpdateNetwork(IList<double> patternError)
-        {
-            this.TotalNetworkError += patternError.Sum();
-            this.SetOutputLayerNeuronsErrors(patternError.GetEnumerator());
+            this.SetOutputLayerNeuronsErrors(expectedResult);
             this.SetHiddenLayerNeuronsErrors();
             this.UpdateWeights();
+            this.TotalNetworkError += CurrNetworkError;
         }
         
-        private void SetOutputLayerNeuronsErrors(IEnumerator<double> patternError)
+        private void SetOutputLayerNeuronsErrors(IList<int> expectedResult)
         {
-            foreach (Neuron neuron in this.OutputLayer.Neurons)
+            for (int i = 0; i < expectedResult.Count; i++)
             {
-                var outputError = patternError.Current;
-                neuron.Error = outputError != 0 ? outputError*GetDerivative(neuron) : 0;
-                patternError.MoveNext();
-            }				
+                OutputLayer.Neurons[i].Error = (expectedResult[i] - OutputLayer.Neurons[i].Output)*
+                                               GetDerivative(OutputLayer.Neurons[i]);
+            }			
         }
 
         private void SetHiddenLayerNeuronsErrors()
@@ -169,7 +169,7 @@ namespace Net
 
         private void UpdateWeights()
         {
-            foreach (var layer in Layers)
+            foreach (var layer in Layers.Reverse())
             {
                 foreach (var neuron in layer.Neurons)
                 {
@@ -182,19 +182,15 @@ namespace Net
         {
             foreach (Connection connection in neuron.InputConnections)
             {
-                var input = connection.Source.Output;
-                if (input != 0)
-                {
-                    var weight = connection.Weight;
+                var weight = connection.Weight;
 
-                    var currentWeighValue = weight.Value;
-                    var previousWeightValue = weight.PreviousValue;
-                    var deltaWeight = this.LearningRate * neuron.Error * input +
-                        this.Momentum * (currentWeighValue - previousWeightValue);
+                var currentWeighValue = weight.Value;
+                var previousWeightValue = weight.PreviousValue;
+                var deltaWeight = this.LearningRate*neuron.Error*connection.Source.Output +
+                                  this.Momentum*(currentWeighValue - previousWeightValue);
 
-                    weight.PreviousValue = currentWeighValue;
-                    weight.Value += deltaWeight;
-                }
+                weight.PreviousValue = currentWeighValue;
+                weight.Value += deltaWeight;
             }
         }
 
