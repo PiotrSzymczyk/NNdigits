@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeuralNetworks2"
+        xmlns:TransferFunctions="clr-namespace:Net.TransferFunctions;assembly=Net"
         x:Class="NeuralNetworks2.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="692.472" Width="1039.631">
@@ -99,15 +100,45 @@
         <Button x:Name="b9x4" Grid.Row="9" Grid.Column="4" Background="White" Click="Button_Click"/>
         <Button x:Name="b9x5" Grid.Row="9" Grid.Column="5" Background="White" Click="Button_Click"/>
         <Button x:Name="b9x6" Grid.Row="9" Grid.Column="6" Background="White" Click="Button_Click"/>
-        <Label x:Name="label" Content="Learnig set dir:" Grid.Column="6" HorizontalAlignment="Left" Margin="75,0,-125,0" VerticalAlignment="Top" Width="100"/>
-        <TextBox x:Name="trainingSet" Grid.Column="6" HorizontalAlignment="Left" Height="23" Margin="194,2,-655,0" TextWrapping="Wrap" Text="C:\Users\piotrek\Documents\Visual Studio 2015\Projects\Datasets\All" VerticalAlignment="Top" Width="511"/>
-        <Label x:Name="label1" Content="Validation set dir:" Grid.Column="6" HorizontalAlignment="Left" Margin="75,32,-125,0" VerticalAlignment="Top" Width="100" Grid.RowSpan="2"/>
-        <TextBox x:Name="testSet" Grid.Column="6" HorizontalAlignment="Left" Height="23" Margin="194,34,-655,0" TextWrapping="Wrap" Text="C:\Users\piotrek\Documents\Visual Studio 2015\Projects\Datasets\All" VerticalAlignment="Top" Width="511" Grid.RowSpan="2"/>
-        <Button x:Name="bLearn" Content="Learn" Grid.Column="6" HorizontalAlignment="Left" Margin="324,19,-349,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="bLearn_Click"/>
         <Button x:Name="bProcess" Grid.ColumnSpan="5" Content="Process image" Grid.Column="1" HorizontalAlignment="Left" Height="32" Margin="0,70,0,-52" Grid.Row="9" VerticalAlignment="Top" Width="250" Click="bProcess_Click"/>
-        <TextBox x:Name="output" Grid.Column="6" HorizontalAlignment="Left" Height="84" Margin="75,16,-655,0" Grid.Row="2" TextWrapping="Wrap" Text="{Binding Path=Output, ElementName=window}" VerticalAlignment="Top" Width="630" FontSize="60" Grid.RowSpan="2"/>
-        <TextBox x:Name="textBox" Grid.Column="6" HorizontalAlignment="Left" Height="251" Margin="97,23,-175,-124" Grid.Row="7" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="128" Grid.RowSpan="3"/>
-        <TextBox x:Name="textBox1" Grid.Column="6" HorizontalAlignment="Left" Height="407" Margin="279,17,-655,-124" Grid.Row="4" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="426" Grid.RowSpan="6"/>
-        <TextBox x:Name="learaningRate" Grid.Column="6" HorizontalAlignment="Left" Height="23" Margin="105,0,-175,0" Grid.Row="5" TextWrapping="Wrap" Text="0,1" VerticalAlignment="Top" Width="120"/>
+        <Grid Grid.Column="6" HorizontalAlignment="Left" Height="385" Margin="72,0,-652,0" Grid.RowSpan="8" VerticalAlignment="Top" Width="630">
+            <Frame x:Name="frame" Content=" Learning" HorizontalAlignment="Left" Height="365" VerticalAlignment="Top" Width="630" BorderThickness="1,2" BorderBrush="Black" Margin="0,10,0,0" FontWeight="ExtraBlack" FontSize="18"/>
+            <Label x:Name="label" Content="Learnig set dir:" HorizontalAlignment="Left" Margin="19,30,0,0" VerticalAlignment="Top" Width="100"/>
+            <TextBox x:Name="trainingSet" HorizontalAlignment="Left" Height="23" Margin="138,32,0,0" TextWrapping="Wrap" Text="C:\Users\piotrek\Documents\Visual Studio 2015\Projects\Datasets\All" VerticalAlignment="Top" Width="476"/>
+            <Label x:Name="label1" Content="Validation set dir:" HorizontalAlignment="Left" Margin="19,62,0,0" VerticalAlignment="Top" Width="100"/>
+            <TextBox x:Name="testSet" HorizontalAlignment="Left" Height="23" Margin="138,64,0,0" TextWrapping="Wrap" Text="C:\Users\piotrek\Documents\Visual Studio 2015\Projects\Datasets\All" VerticalAlignment="Top" Width="476"/>
+            <Button x:Name="bLearn" Content="Learn" Margin="42,285,43,0" VerticalAlignment="Top" Click="bLearn_Click" Height="31"/>
+            <Label x:Name="label1_Copy" Content="Input layer count" HorizontalAlignment="Left" Margin="42,102,0,0" VerticalAlignment="Top" Width="100"/>
+            <Label x:Name="label1_Copy1" Content="Hidden layer count" HorizontalAlignment="Left" Margin="42,133,0,0" VerticalAlignment="Top" Width="110"/>
+            <Label x:Name="label1_Copy2" Content="Output layer count" HorizontalAlignment="Left" Margin="42,164,0,0" VerticalAlignment="Top" Width="110"/>
+            <Label x:Name="label1_Copy3" Content="Max num of epoch" HorizontalAlignment="Left" Margin="337,100,0,0" VerticalAlignment="Top" Width="110"/>
+            <TextBox x:Name="tbInputCount" HorizontalAlignment="Left" Height="23" Margin="161,104,0,0" TextWrapping="Wrap" Text="70" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
+            <TextBox x:Name="tbHiddenCount" HorizontalAlignment="Left" Height="23" Margin="161,135,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
+            <TextBox x:Name="tbOutputCount" HorizontalAlignment="Left" Height="23" Margin="161,166,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
+            <TextBox x:Name="tbNumOfEpoch" HorizontalAlignment="Left" Height="23" Margin="456,104,0,0" TextWrapping="Wrap" Text="500" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
+            <Label x:Name="label1_Copy4" Content="Weights range" HorizontalAlignment="Left" Margin="337,131,0,0" VerticalAlignment="Top" Width="110"/>
+            <TextBox x:Name="tbWeightsRange" HorizontalAlignment="Left" Height="23" Margin="456,135,0,0" TextWrapping="Wrap" Text="0,5" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
+            <Label x:Name="label1_Copy5" Content="Learning rate" HorizontalAlignment="Left" Margin="337,162,0,0" VerticalAlignment="Top" Width="110"/>
+            <TextBox x:Name="tbLearningRate" HorizontalAlignment="Left" Height="23" Margin="456,166,0,0" TextWrapping="Wrap" Text="0,5" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
+            <ComboBox x:Name="cbTransferFunction" HorizontalAlignment="Left" Margin="161,246,0,0" VerticalAlignment="Top" Width="152" SelectedIndex="0">
+                <ComboBoxItem Content="Sigmoid Function"/>
+                <ComboBoxItem Content="Fast Sigmoid Function"/>
+            </ComboBox>
+            <Label x:Name="label1_Copy6" Content="Transfer function" HorizontalAlignment="Left" Margin="42,244,0,0" VerticalAlignment="Top" Width="110"/>
+            <Label x:Name="label1_Copy7" Content="Beta" HorizontalAlignment="Left" Margin="337,242,0,0" VerticalAlignment="Top" Width="110"/>
+            <TextBox x:Name="tbBeta" HorizontalAlignment="Left" Height="23" Margin="456,246,0,0" TextWrapping="Wrap" Text="0,5" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
+            <Label x:Name="label1_Copy8" Content="Momentum" HorizontalAlignment="Left" Margin="337,193,0,0" VerticalAlignment="Top" Width="110"/>
+            <TextBox x:Name="tbMomentum" HorizontalAlignment="Left" Height="23" Margin="456,197,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
+            <Label x:Name="label1_Copy9" Content="Current epoch" HorizontalAlignment="Left" Margin="42,330,0,0" VerticalAlignment="Top" Width="110"/>
+            <TextBox x:Name="tbCurrentEpoch" HorizontalAlignment="Left" Height="23" Margin="161,332,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" IsReadOnly="True" IsEnabled="False"/>
+            <Label x:Name="label1_Copy10" Content="Total epoch error" HorizontalAlignment="Left" Margin="337,330,0,0" VerticalAlignment="Top" Width="110"/>
+            <TextBox x:Name="tbTotalNetworkError" HorizontalAlignment="Left" Height="23" Margin="456,332,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" IsReadOnly="True" IsEnabled="False"/>
+        </Grid>
+        <Grid Grid.Column="6" HorizontalAlignment="Left" Height="130" Margin="72,40,-652,-20" Grid.Row="7" Grid.RowSpan="3" VerticalAlignment="Top" Width="630">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="59*"/>
+                <RowDefinition Height="71*"/>
+            </Grid.RowDefinitions>
+        </Grid>
     </Grid>
 </Window>

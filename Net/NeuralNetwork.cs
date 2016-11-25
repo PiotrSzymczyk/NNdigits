@@ -11,6 +11,7 @@ namespace Net
 {
     public class NeuralNetwork
     {
+        private double totalNetworkError;
         public IList<Layer> Layers { get; set; }
 
         public double LearningRate { get; set; }
@@ -27,13 +28,13 @@ namespace Net
             OutputLayer
         }).ToList();
 
-        public double CurrNetworkError => Layers.SelectMany(l => l.Neurons).Sum(neuron => neuron.Error);
+        public double CurrNetworkError => Layers.SelectMany(l => l.Neurons).Sum(neuron => Math.Pow(neuron.Error,2));
 
-        public virtual double TotalNetworkError { get; set; }
+        public virtual double TotalNetworkError
+        {
+            get; set;  }
 
         public int MaxNumberOfEpoch { get; set; } = 5000;
-
-        public bool Paused { get; set; } = false;
 
         public int Output
             => OutputLayer.Neurons.IndexOf(
@@ -81,10 +82,6 @@ namespace Net
             for (int i = 0; i < MaxNumberOfEpoch; i++)
             {
                 DoLearningEpoch(trainingSet.OrderBy(val => rand.Next()).ToList());
-                while (Paused)
-                {
-                    Thread.Sleep(1000);
-                }
             }
         }
 
