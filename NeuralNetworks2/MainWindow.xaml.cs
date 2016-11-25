@@ -17,6 +17,7 @@ namespace NeuralNetworks2
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string PatternsPath = "C:\\Users\\piotrek\\Documents\\Visual Studio 2015\\Projects\\NeuralNetworks2\\Patterns\\";
         private bool[] inputBoard;
         private NeuralNetwork net;
         private bool paused = false;
@@ -34,6 +35,7 @@ namespace NeuralNetworks2
         {
             inputBoard = new bool[70];
             InitializeComponent();
+            InitializeNet();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -68,6 +70,7 @@ namespace NeuralNetworks2
             {
                 isRunning = true;
                 paused = false;
+                bProcess.IsEnabled = false;
                 bLearn.Content = "Stop";
 
                 InitializeNet();
@@ -88,11 +91,13 @@ namespace NeuralNetworks2
             else if (paused)
             {
                 paused = false;
+                bProcess.IsEnabled = false;
                 bLearn.Content = "Pause";
             }
             else
             {
                 paused = true;
+                bProcess.IsEnabled = true;
                 bLearn.Content = "Continue";
             }
         }
@@ -136,6 +141,11 @@ namespace NeuralNetworks2
             }
         }
 
+        public void TeachOneEpoch(IList<TrainingElement> trainingSet)
+        {
+            net.DoLearningEpoch(trainingSet.OrderBy(val => RandomGenerator.NextDouble()).ToList());
+        }
+
         private void UpdateGUI(int numOfEpoch, double precision)
         {
             this.InvokeIfRequired(val => tbCurrentEpoch.Text = val.ToString(), numOfEpoch);
@@ -143,9 +153,21 @@ namespace NeuralNetworks2
             this.InvokeIfRequired(val => progress.Value = val, 100/Math.Log(precision, net.TotalNetworkError));
         }
 
-        public void TeachOneEpoch(IList<TrainingElement> trainingSet)
+        private void cbPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            net.DoLearningEpoch(trainingSet.OrderBy(val => RandomGenerator.NextDouble()).ToList());
+            var image = ImageLoader.LoadImage(PatternsPath + cbPattern.SelectedIndex + ".png");
+            var newInputBoard = ImageLoader.ParseImageToVector(image).Select(val => val == 1).ToArray();
+            for (int i = 0; i < inputBoard.Length; i++)
+            {
+                if (newInputBoard[i] != inputBoard[i])
+                {
+                    int column = i%7;
+                    int row = i/7;
+                    ToggleColor((Button) buttonInputBoard.Children.Cast<UIElement>()
+                        .Single(button => Grid.GetRow(button) == row && Grid.GetColumn(button) == column));
+                }
+            }
+            inputBoard = newInputBoard;
         }
     }
 }
