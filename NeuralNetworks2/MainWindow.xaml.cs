@@ -78,15 +78,18 @@ namespace NeuralNetworks2
 
                 var trainingSet = ImageLoader.LoadTrainingElementsFromDirectory(this.trainingSet.Text,
                     int.Parse(tbOutputCount.Text));
+                var validationSet = ImageLoader.LoadTrainingElementsFromDirectory(this.testSet.Text,
+                    int.Parse(tbOutputCount.Text));
                 var precision = double.Parse(tbPrecision.Text);
 
                 await Task.Run(() =>
                 {
-                    Teach(trainingSet, precision);
+                    Teach(trainingSet, validationSet, precision);
                     return true;
                 });
 
                 BlockSetupUI(false);
+                bProcess.IsEnabled = true;
                 bLearn.Content = "Learn";
                 isRunning = false;
             }
@@ -136,13 +139,15 @@ namespace NeuralNetworks2
             tbResult.Text = net.Output.ToString();
         }
 
-        public void Teach(IList<TrainingElement> trainingSet, double precision)
+        public void Teach(IList<TrainingElement> trainingSet, IList<TrainingElement> validationSet, double precision)
         {
             for (int i = 0; i < net.MaxNumberOfEpoch && isRunning; i++)
             {
                 net.DoLearningEpoch(trainingSet.OrderBy(val => RandomGenerator.NextDouble()).ToList());
+                net.Validate(validationSet);
                 UpdateGUI(i, precision);
-                if (net.TotalNetworkError < precision)
+
+                if (net.ValidationAccuracy > (1-precision)*100)
                 {
                     break;
                 }
@@ -161,9 +166,8 @@ namespace NeuralNetworks2
         private void UpdateGUI(int numOfEpoch, double precision)
         {
             this.InvokeIfRequired(val => tbCurrentEpoch.Text = val.ToString(), numOfEpoch);
-            this.InvokeIfRequired(val => tbTotalNetworkError.Text = val, net.TotalNetworkError.ToString());
-            this.InvokeIfRequired(val => progress.Value = val,
-                net.TotalNetworkError != 0 ? 100/Math.Log(precision, net.TotalNetworkError) : 0);
+            this.InvokeIfRequired(val => tbTotalNetworkError.Text = val, net.ValidationAccuracy.ToString());
+            this.InvokeIfRequired(val => progress.Value = val, net.ValidationAccuracy/(1 - precision)*100);
         }
 
         private void cbPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -177,7 +181,6 @@ namespace NeuralNetworks2
                     ToggleButton(i);
                 }
             }
-            inputBoard = newInputBoard;
         }
 
         private void tbLearningRate_TextChanged(object sender, TextChangedEventArgs e)

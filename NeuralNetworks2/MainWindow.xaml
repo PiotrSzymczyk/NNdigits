@@ -103,9 +103,9 @@
         <Grid Grid.Column="6" HorizontalAlignment="Left" Height="376" Margin="72,0,-652,0" Grid.RowSpan="8" VerticalAlignment="Top" Width="630">
             <Frame x:Name="frame" Content=" Learning" HorizontalAlignment="Left" Width="630" BorderThickness="1,2" BorderBrush="Black" Margin="0,10" FontWeight="ExtraBlack" FontSize="18"/>
             <Label x:Name="label" Content="Learnig set dir:" HorizontalAlignment="Left" Margin="19,37,0,0" VerticalAlignment="Top" Width="100"/>
-            <TextBox x:Name="trainingSet" HorizontalAlignment="Left" Height="23" Margin="138,39,0,0" TextWrapping="Wrap" Text="C:\Users\piotrek\Documents\Visual Studio 2015\Projects\Datasets\All" VerticalAlignment="Top" Width="476"/>
+            <TextBox x:Name="trainingSet" HorizontalAlignment="Left" Height="23" Margin="138,39,0,0" TextWrapping="Wrap" Text="LearningSet" VerticalAlignment="Top" Width="476"/>
             <Label x:Name="label1" Content="Validation set dir:" HorizontalAlignment="Left" Margin="19,69,0,0" VerticalAlignment="Top" Width="100"/>
-            <TextBox x:Name="testSet" HorizontalAlignment="Left" Height="23" Margin="138,71,0,0" TextWrapping="Wrap" Text="C:\Users\piotrek\Documents\Visual Studio 2015\Projects\Datasets\All" VerticalAlignment="Top" Width="476"/>
+            <TextBox x:Name="testSet" HorizontalAlignment="Left" Height="23" Margin="138,71,0,0" TextWrapping="Wrap" Text="ValidationSet" VerticalAlignment="Top" Width="476"/>
             <Button x:Name="bLearn" Content="Learn" Margin="39,270,132,0" VerticalAlignment="Top" Click="bLearn_Click" Height="31">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -127,7 +127,7 @@
             <Label x:Name="label1_Copy4" Content="Weights range" HorizontalAlignment="Left" Margin="337,131,0,0" VerticalAlignment="Top" Width="110"/>
             <TextBox x:Name="tbWeightsRange" HorizontalAlignment="Left" Height="23" Margin="456,135,0,0" TextWrapping="Wrap" Text="0,5" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
             <Label x:Name="label1_Copy5" Content="Learning rate" HorizontalAlignment="Left" Margin="337,162,0,0" VerticalAlignment="Top" Width="110"/>
-            <TextBox x:Name="tbLearningRate" HorizontalAlignment="Left" Height="23" Margin="456,166,0,0" TextWrapping="Wrap" Text="0,5" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" TextChanged="tbLearningRate_TextChanged"/>
+            <TextBox x:Name="tbLearningRate" HorizontalAlignment="Left" Height="23" Margin="456,166,0,0" TextWrapping="Wrap" Text="0,05" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" TextChanged="tbLearningRate_TextChanged"/>
             <ComboBox x:Name="cbTransferFunction" HorizontalAlignment="Left" Margin="161,230,0,0" VerticalAlignment="Top" Width="152" SelectedIndex="0">
                 <ComboBoxItem Content="Sigmoid Function"/>
                 <ComboBoxItem Content="Fast Sigmoid Function"/>
@@ -136,13 +136,13 @@
             <Label x:Name="label1_Copy7" Content="Beta" HorizontalAlignment="Left" Margin="337,226,0,0" VerticalAlignment="Top" Width="110"/>
             <TextBox x:Name="tbBeta" HorizontalAlignment="Left" Height="23" Margin="456,230,0,0" TextWrapping="Wrap" Text="0,5" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
             <Label x:Name="label1_Copy8" Content="Momentum" HorizontalAlignment="Left" Margin="337,193,0,0" VerticalAlignment="Top" Width="110"/>
-            <TextBox x:Name="tbMomentum" HorizontalAlignment="Left" Height="23" Margin="456,197,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" TextChanged="tbMomentum_TextChanged"/>
+            <TextBox x:Name="tbMomentum" HorizontalAlignment="Left" Height="23" Margin="456,197,0,0" TextWrapping="Wrap" Text="0,2" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" TextChanged="tbMomentum_TextChanged"/>
             <Label x:Name="label1_Copy9" Content="Current epoch" HorizontalAlignment="Left" Margin="42,330,0,0" VerticalAlignment="Top" Width="110"/>
             <TextBox x:Name="tbCurrentEpoch" HorizontalAlignment="Left" Height="23" Margin="161,332,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" IsReadOnly="True" IsEnabled="False"/>
-            <Label x:Name="label1_Copy10" Content="Total epoch error" HorizontalAlignment="Left" Margin="337,330,0,0" VerticalAlignment="Top" Width="110"/>
+            <Label x:Name="label1_Copy10" Content="Validation set accuracy:" HorizontalAlignment="Left" Margin="314,330,0,0" VerticalAlignment="Top" Width="133"/>
             <TextBox x:Name="tbTotalNetworkError" HorizontalAlignment="Left" Height="23" Margin="456,332,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" IsReadOnly="True" IsEnabled="False"/>
-            <Label x:Name="label1_Copy11" Content="Precision" HorizontalAlignment="Left" Margin="42,193,0,0" VerticalAlignment="Top" Width="110"/>
-            <TextBox x:Name="tbPrecision" HorizontalAlignment="Left" Height="23" Margin="161,197,0,0" TextWrapping="Wrap" Text="0,001" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
+            <Label x:Name="label1_Copy11" Content="Searched accuracy" HorizontalAlignment="Left" Margin="42,193,0,0" VerticalAlignment="Top" Width="110"/>
+            <TextBox x:Name="tbPrecision" HorizontalAlignment="Left" Height="23" Margin="161,197,0,0" TextWrapping="Wrap" Text="0,15" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
             <ProgressBar x:Name="progress" HorizontalAlignment="Left" Height="10" Margin="39,301,0,0" VerticalAlignment="Top" Width="459" Foreground="#FF1BC33A"/>
             <Button x:Name="bReset" Content="Reset" HorizontalAlignment="Left" Height="41" Margin="513,270,0,0" VerticalAlignment="Top" Width="101" Click="bReset_Click"/>
         </Grid>

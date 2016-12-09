@@ -20,6 +20,7 @@ namespace NeuralNetworks2
 
         public static IDictionary<string,Bitmap> LoadImagesFromDirectory(string dirPath)
         {
+            dirPath = Path.GetFullPath(dirPath);
             IDictionary<string,Bitmap> imagesWithNames = new Dictionary<string,Bitmap>();
             var fileNames = Directory.GetFiles(dirPath).Where(name => Regex.IsMatch(name, ImageFormatRegex));
 

@@ -40,7 +40,9 @@ namespace Net
 
         public int Output
             => OutputLayer.Neurons.IndexOf(
-                OutputLayer.Neurons.First(neuron => neuron.Output == OutputLayer.Neurons.Max(n => n.Output)));
+                OutputLayer.Neurons.FirstOrDefault(neuron => neuron.Output == OutputLayer.Neurons.Max(n => n.Output)));
+
+        public double ValidationAccuracy { get; set; }
 
         public NeuralNetwork(int numOfInputs, int numOfHiddenLayerNeurons, int numOfOutputs, ITransferFunction transferFun, double minWeight, double maxWeight)
         {
@@ -66,7 +68,7 @@ namespace Net
             this.Process();
         }
 
-        public double Validate(IList<TrainingElement> testSet)
+        public void Validate(IList<TrainingElement> testSet)
         {
             double hits = 0;
             foreach (var test in testSet)
@@ -75,7 +77,7 @@ namespace Net
                 this.Process();
                 if (Output == test.ExpectedOutput.IndexOf(1)) hits++;
             }
-            return hits/testSet.Count;
+            this. ValidationAccuracy = hits/testSet.Count;
         }
 
         public void Learn(IList<TrainingElement> trainingSet)
