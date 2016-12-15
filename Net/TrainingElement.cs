@@ -7,6 +7,6 @@ namespace Net
     {
         public IList<byte> Input;
 
-        public IList<int> ExpectedOutput;
+        public IList<byte> ExpectedOutput;
     }
 }

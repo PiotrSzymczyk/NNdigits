@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Net.Base;
 using Net.TransferFunctions;
+using Color = System.Drawing.Color;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Net
 {
@@ -30,6 +37,14 @@ namespace Net
 
         public double CurrNetworkError => Layers.SelectMany(l => l.Neurons).Sum(neuron => Math.Pow(neuron.Error,2));
 
+        public double ActivationThereshold { get; set; } = 0.6;
+
+        public double[] ActivationList;
+
+        public double AverageActivation { get; set; } = 0.05;
+
+        public double SparsityCoefficient { get; set; } = 0.001;
+
         public virtual double TotalNetworkError
         {
             get { return totalNetworkError/2; }
@@ -41,6 +56,8 @@ namespace Net
         public int Output
             => OutputLayer.Neurons.IndexOf(
                 OutputLayer.Neurons.FirstOrDefault(neuron => neuron.Output == OutputLayer.Neurons.Max(n => n.Output)));
+
+
 
         public double ValidationAccuracy { get; set; }
 
@@ -55,6 +72,12 @@ namespace Net
             {
                 Layers[i].ConenctToPreviousLayer(Layers[i-1], minWeight, maxWeight);
             }
+        }
+
+        private void ResetActivation()
+        {
+            ActivationList = new double[HiddenLayers.First().Neurons.Count];
+
         }
 
         public NeuralNetwork(int numOfInputs, int numOfHiddenLayerNeurons, int numOfOutputs, ITransferFunction transferFun)
@@ -75,7 +98,12 @@ namespace Net
             {
                 this.SetInput(test.Input);
                 this.Process();
-                if (Output == test.ExpectedOutput.IndexOf(1)) hits++;
+                bool same = true;
+                for (int i = 0; i < OutputLayer.Neurons.Count; i++)
+                {
+                    if (Math.Abs(OutputLayer.Neurons[i].Output - test.ExpectedOutput[i]) > 0.2) same = false;
+                }
+                if (same) hits++;
             }
             this. ValidationAccuracy = hits/testSet.Count;
         }
@@ -92,6 +120,7 @@ namespace Net
         public void DoLearningEpoch(IList<TrainingElement> trainingSet)
         {
             this.totalNetworkError = 0d;
+            MakeForwardPass(trainingSet);
 
             using (var iterator = trainingSet.GetEnumerator())
             {
@@ -99,6 +128,34 @@ namespace Net
                 {
                     var trainingElement = iterator.Current;
                     this.LearnPattern(trainingElement);
+                }
+            }
+        }
+
+        private void MakeForwardPass(IList<TrainingElement> trainingSet)
+        {
+            ResetActivation();
+            using (var iterator = trainingSet.GetEnumerator())
+            {
+                while (iterator.MoveNext())
+                {
+                    Process(iterator.Current.Input);
+                    UpdateActivation();
+                }
+            }
+            for (int i = 0; i < ActivationList.Length; i++)
+            {
+                ActivationList[i] /= trainingSet.Count;
+            }
+        }
+
+        private void UpdateActivation()
+        {
+            for (int i = 0; i < HiddenLayers.First().Neurons.Count; i++)
+            {
+                if (HiddenLayers.First().Neurons[i].Output > ActivationThereshold)
+                {
+                    ActivationList[i] += 1;
                 }
             }
         }
@@ -137,15 +194,15 @@ namespace Net
             }
         }
 
-        private void UpdateNetwork(IList<int> expectedResult)
+        private void UpdateNetwork(IList<byte> expectedResult)
         {
             this.SetOutputLayerNeuronsErrors(expectedResult);
             this.SetHiddenLayerNeuronsErrors();
             this.UpdateWeights();
             this.totalNetworkError += CurrNetworkError;
         }
-        
-        private void SetOutputLayerNeuronsErrors(IList<int> expectedResult)
+
+        private void SetOutputLayerNeuronsErrors(IList<byte> expectedResult)
         {
             for (int i = 0; i < expectedResult.Count; i++)
             {
@@ -158,19 +215,20 @@ namespace Net
         {
             foreach (var layer in HiddenLayers.Reverse())
             {
-                foreach (var neuron in layer.Neurons)
+                for (int i = 0; i < layer.Neurons.Count; i++)
                 {
-                    var deltaSum = neuron.OutConnections.Sum(connection 
+                    var deltaSum = layer.Neurons[i].OutConnections.Sum(connection 
                         => connection.Destination.Error * connection.Weight.Value);
 
-                    neuron.Error = GetDerivative(neuron) * deltaSum;
+                    layer.Neurons[i].Error = GetDerivative(layer.Neurons[i]) * (deltaSum
+                        + SparsityCoefficient * ( (1 - AverageActivation) / (1 - ActivationList[i]) - AverageActivation / ActivationList[i]));
                 }
             }
         }
 
         private void UpdateWeights()
         {
-            foreach (var layer in Layers.Reverse())
+            foreach (var layer in Layers.Except(new[] {InputLayer}).Reverse())
             {
                 foreach (var neuron in layer.Neurons)
                 {

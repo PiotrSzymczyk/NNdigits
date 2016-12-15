@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Net;
 using Net.TransferFunctions;
+using Brushes = System.Windows.Media.Brushes;
+using Color = System.Windows.Media.Color;
 
 namespace NeuralNetworks2
 {
@@ -76,10 +82,8 @@ namespace NeuralNetworks2
 
                 InitializeNet();
 
-                var trainingSet = ImageLoader.LoadTrainingElementsFromDirectory(this.trainingSet.Text,
-                    int.Parse(tbOutputCount.Text));
-                var validationSet = ImageLoader.LoadTrainingElementsFromDirectory(this.testSet.Text,
-                    int.Parse(tbOutputCount.Text));
+                var trainingSet = ImageLoader.LoadTrainingElementsFromDirectoryWithoutLabels(this.trainingSet.Text);
+                var validationSet = ImageLoader.LoadTrainingElementsFromDirectoryWithoutLabels(this.testSet.Text);
                 var precision = double.Parse(tbPrecision.Text);
 
                 await Task.Run(() =>
@@ -105,6 +109,13 @@ namespace NeuralNetworks2
                 bProcess.IsEnabled = true;
                 bLearn.Content = "Continue";
             }
+
+            var hiddenLayerImage = ImageLoader.GetHiddenLayerImage(7, 10, 7, 10,
+                net.HiddenLayers.First()
+                    .Neurons.Select(n => n.ShowLearnedFunction()).GetEnumerator(), 2);
+            hiddenLayerImage.Save("img.bmp");
+            this.hiddenLayer.Source =
+                ImageLoader.ToBitmapImage(hiddenLayerImage);
         }
 
         private void BlockSetupUI(bool disable)
@@ -136,7 +147,7 @@ namespace NeuralNetworks2
         {
             var input = inputBoard.Select(val => val ? (byte) 1 : (byte) 0).ToList();
             net.Process(input);
-            tbResult.Text = net.Output.ToString();
+            output.Source = ImageLoader.ToBitmapImage(ImageLoader.ParseVectorToImage(net.OutputLayer.Neurons.Select(neuron => (byte)(neuron.Output*255)).ToArray()));
         }
 
         public void Teach(IList<TrainingElement> trainingSet, IList<TrainingElement> validationSet, double precision)
@@ -144,13 +155,20 @@ namespace NeuralNetworks2
             for (int i = 0; i < net.MaxNumberOfEpoch && isRunning; i++)
             {
                 net.DoLearningEpoch(trainingSet.OrderBy(val => RandomGenerator.NextDouble()).ToList());
-                net.Validate(validationSet);
+                //net.Validate(validationSet);
                 UpdateGUI(i, precision);
 
-                if (net.ValidationAccuracy > (1-precision)*100)
-                {
-                    break;
-                }
+//                if (net.ValidationAccuracy > (1-precision)*100)
+//                {
+//
+//                    var hiddenLayerImage = ImageLoader.GetHiddenLayerImage(7, 10, 7, 10,
+//                        net.HiddenLayers.First()
+//                            .Neurons.Select(n => n.ShowLearnedFunction()).GetEnumerator(), 2);
+//                    hiddenLayerImage.Save("img.bmp");
+//                    this.hiddenLayer.Source =
+//                        ImageLoader.ToBitmapImage(hiddenLayerImage);
+//                    break;
+//                }
                 while (paused)
                 {
                     Thread.Sleep(1000);
@@ -172,14 +190,23 @@ namespace NeuralNetworks2
 
         private void cbPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var image = ImageLoader.LoadImage(PatternsPath + cbPattern.SelectedIndex + ".png");
-            var newInputBoard = ImageLoader.ParseImageToVector(image).Select(val => val == 1).ToArray();
+            var desiredState = ImageLoader.ParseImageToVector(
+                ImageLoader.LoadImage(PatternsPath + cbPattern.SelectedIndex + ".png"))
+                .Select(val => val == 1).
+                ToArray();
+            UpdateBoard(desiredState);
+        }
+
+        private void UpdateBoard(bool[] desiredState)
+        {
+            
             for (int i = 0; i < inputBoard.Length; i++)
             {
-                if (newInputBoard[i] != inputBoard[i])
+                if (desiredState[i] != inputBoard[i])
                 {
                     ToggleButton(i);
                 }
+                
             }
         }
 
@@ -234,6 +261,14 @@ namespace NeuralNetworks2
                 .First(b => Grid.GetRow(b) == row && Grid.GetColumn(b) == column);
             ToggleColor(button);
             ToggleValue(button);
+        }
+
+        public static BitmapSource ToWpfBitmap(Bitmap bitmap)
+        {
+            var hBitmap = bitmap.GetHbitmap();
+            var result = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, 
+                System.Windows.Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+            return result;
         }
     }
 }

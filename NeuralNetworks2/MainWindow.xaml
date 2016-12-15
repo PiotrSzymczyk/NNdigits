@@ -7,7 +7,7 @@
         xmlns:TransferFunctions="clr-namespace:Net.TransferFunctions;assembly=Net"
         x:Class="NeuralNetworks2.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="561.972" Width="1039.631">
+        Title="MainWindow" Height="561.972" Width="1592.631">
     <Grid Name="buttonInputBoard" HorizontalAlignment="Left" Height="500" Margin="10,10,0,0" VerticalAlignment="Top" Width="350">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -121,13 +121,13 @@
             <Label x:Name="label1_Copy2" Content="Output layer count" HorizontalAlignment="Left" Margin="42,164,0,0" VerticalAlignment="Top" Width="110"/>
             <Label x:Name="label1_Copy3" Content="Max num of epoch" HorizontalAlignment="Left" Margin="337,100,0,0" VerticalAlignment="Top" Width="110"/>
             <TextBox x:Name="tbInputCount" HorizontalAlignment="Left" Height="23" Margin="161,104,0,0" TextWrapping="Wrap" Text="70" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
-            <TextBox x:Name="tbHiddenCount" HorizontalAlignment="Left" Height="23" Margin="161,135,0,0" TextWrapping="Wrap" Text="15" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
-            <TextBox x:Name="tbOutputCount" HorizontalAlignment="Left" Height="23" Margin="161,166,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
+            <TextBox x:Name="tbHiddenCount" HorizontalAlignment="Left" Height="23" Margin="161,135,0,0" TextWrapping="Wrap" Text="42" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
+            <TextBox x:Name="tbOutputCount" HorizontalAlignment="Left" Height="23" Margin="161,166,0,0" TextWrapping="Wrap" Text="70" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
             <TextBox x:Name="tbNumOfEpoch" HorizontalAlignment="Left" Height="23" Margin="456,104,0,0" TextWrapping="Wrap" Text="500" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" TextChanged="tbNumOfEpoch_TextChanged"/>
             <Label x:Name="label1_Copy4" Content="Weights range" HorizontalAlignment="Left" Margin="337,131,0,0" VerticalAlignment="Top" Width="110"/>
             <TextBox x:Name="tbWeightsRange" HorizontalAlignment="Left" Height="23" Margin="456,135,0,0" TextWrapping="Wrap" Text="0,5" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
             <Label x:Name="label1_Copy5" Content="Learning rate" HorizontalAlignment="Left" Margin="337,162,0,0" VerticalAlignment="Top" Width="110"/>
-            <TextBox x:Name="tbLearningRate" HorizontalAlignment="Left" Height="23" Margin="456,166,0,0" TextWrapping="Wrap" Text="0,05" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" TextChanged="tbLearningRate_TextChanged"/>
+            <TextBox x:Name="tbLearningRate" HorizontalAlignment="Left" Height="23" Margin="456,166,0,0" TextWrapping="Wrap" Text="0,5" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" TextChanged="tbLearningRate_TextChanged"/>
             <ComboBox x:Name="cbTransferFunction" HorizontalAlignment="Left" Margin="161,230,0,0" VerticalAlignment="Top" Width="152" SelectedIndex="0">
                 <ComboBoxItem Content="Sigmoid Function"/>
                 <ComboBoxItem Content="Fast Sigmoid Function"/>
@@ -136,7 +136,7 @@
             <Label x:Name="label1_Copy7" Content="Beta" HorizontalAlignment="Left" Margin="337,226,0,0" VerticalAlignment="Top" Width="110"/>
             <TextBox x:Name="tbBeta" HorizontalAlignment="Left" Height="23" Margin="456,230,0,0" TextWrapping="Wrap" Text="0,5" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
             <Label x:Name="label1_Copy8" Content="Momentum" HorizontalAlignment="Left" Margin="337,193,0,0" VerticalAlignment="Top" Width="110"/>
-            <TextBox x:Name="tbMomentum" HorizontalAlignment="Left" Height="23" Margin="456,197,0,0" TextWrapping="Wrap" Text="0,2" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" TextChanged="tbMomentum_TextChanged"/>
+            <TextBox x:Name="tbMomentum" HorizontalAlignment="Left" Height="23" Margin="456,197,0,0" TextWrapping="Wrap" Text="0,6" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" TextChanged="tbMomentum_TextChanged"/>
             <Label x:Name="label1_Copy9" Content="Current epoch" HorizontalAlignment="Left" Margin="42,330,0,0" VerticalAlignment="Top" Width="110"/>
             <TextBox x:Name="tbCurrentEpoch" HorizontalAlignment="Left" Height="23" Margin="161,332,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" IsReadOnly="True" IsEnabled="False"/>
             <Label x:Name="label1_Copy10" Content="Validation set accuracy:" HorizontalAlignment="Left" Margin="314,330,0,0" VerticalAlignment="Top" Width="133"/>
@@ -191,8 +191,9 @@
                 </Rectangle.RenderTransform>
             </Rectangle>
             <Label x:Name="label2" Content="Output:" HorizontalAlignment="Left" Height="42" Margin="394,29,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="109" FontSize="26"/>
-            <TextBox x:Name="tbResult" HorizontalAlignment="Left" Height="35" Margin="508,31,0,0" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="41" Grid.RowSpan="2" FontSize="26" TextAlignment="Center" Background="{x:Null}" IsReadOnly="True" />
             <Button x:Name="bDistort" Content="Distort" HorizontalAlignment="Left" Margin="207,20,0,0" VerticalAlignment="Top" Width="75" Click="bDistort_Click"/>
+            <Image x:Name="output" HorizontalAlignment="Left" Height="100" Margin="527,-1,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="70"/>
         </Grid>
+        <Image x:Name="hiddenLayer" Grid.Column="6" HorizontalAlignment="Left" Height="489" Margin="746,11,-1120,0" Grid.RowSpan="10" VerticalAlignment="Top" Width="424"/>
     </Grid>
 </Window>

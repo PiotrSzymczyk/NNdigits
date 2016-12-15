@@ -88,5 +88,16 @@ namespace Net.Base
         {
             return $"N(i:{Math.Round(NetInput, 2)}; o:{Math.Round(Output, 2)})";
         }
+
+        public byte[] ShowLearnedFunction()
+        {
+            var result = new byte[InputConnections.Count];
+            var denominator = Math.Sqrt(InputConnections.Sum(i => Math.Pow(i.Weight.Value,2)));
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = (byte) (InputConnections[i].Weight.Value/denominator*255);
+            }
+            return result;
+        }
     }
 }
