@@ -83,12 +83,10 @@ namespace NeuralNetworks2
                 InitializeNet();
 
                 var trainingSet = ImageLoader.LoadTrainingElementsFromDirectoryWithoutLabels(this.trainingSet.Text);
-                var validationSet = ImageLoader.LoadTrainingElementsFromDirectoryWithoutLabels(this.testSet.Text);
-                var precision = double.Parse(tbPrecision.Text);
 
                 await Task.Run(() =>
                 {
-                    Teach(trainingSet, validationSet, precision);
+                    Teach(trainingSet);
                     return true;
                 });
 
@@ -111,8 +109,8 @@ namespace NeuralNetworks2
             }
 
             var hiddenLayerImage = ImageLoader.GetHiddenLayerImage(7, 10, 7, 10,
-                net.HiddenLayers.First()
-                    .Neurons.Select(n => n.ShowLearnedFunction()).GetEnumerator(), 2);
+            net.HiddenLayers.First()
+                .Neurons.Select(n => n.ShowLearnedFunction()).GetEnumerator(), 2);
             hiddenLayerImage.Save("img.bmp");
             this.hiddenLayer.Source =
                 ImageLoader.ToBitmapImage(hiddenLayerImage);
@@ -141,6 +139,8 @@ namespace NeuralNetworks2
                 MaxNumberOfEpoch = int.Parse(tbNumOfEpoch.Text),
                 Momentum = double.Parse(tbMomentum.Text)
             };
+
+
         }
 
         private void bProcess_Click(object sender, RoutedEventArgs e)
@@ -150,25 +150,12 @@ namespace NeuralNetworks2
             output.Source = ImageLoader.ToBitmapImage(ImageLoader.ParseVectorToImage(net.OutputLayer.Neurons.Select(neuron => (byte)(neuron.Output*255)).ToArray()));
         }
 
-        public void Teach(IList<TrainingElement> trainingSet, IList<TrainingElement> validationSet, double precision)
+        public void Teach(IList<TrainingElement> trainingSet)
         {
             for (int i = 0; i < net.MaxNumberOfEpoch && isRunning; i++)
             {
                 net.DoLearningEpoch(trainingSet.OrderBy(val => RandomGenerator.NextDouble()).ToList());
-                //net.Validate(validationSet);
-                UpdateGUI(i, precision);
-
-//                if (net.ValidationAccuracy > (1-precision)*100)
-//                {
-//
-//                    var hiddenLayerImage = ImageLoader.GetHiddenLayerImage(7, 10, 7, 10,
-//                        net.HiddenLayers.First()
-//                            .Neurons.Select(n => n.ShowLearnedFunction()).GetEnumerator(), 2);
-//                    hiddenLayerImage.Save("img.bmp");
-//                    this.hiddenLayer.Source =
-//                        ImageLoader.ToBitmapImage(hiddenLayerImage);
-//                    break;
-//                }
+                UpdateGUI(i);
                 while (paused)
                 {
                     Thread.Sleep(1000);
@@ -176,16 +163,10 @@ namespace NeuralNetworks2
             }
         }
 
-        public void TeachOneEpoch(IList<TrainingElement> trainingSet)
-        {
-            net.DoLearningEpoch(trainingSet.OrderBy(val => RandomGenerator.NextDouble()).ToList());
-        }
-
-        private void UpdateGUI(int numOfEpoch, double precision)
+        private void UpdateGUI(int numOfEpoch)
         {
             this.InvokeIfRequired(val => tbCurrentEpoch.Text = val.ToString(), numOfEpoch);
             this.InvokeIfRequired(val => tbTotalNetworkError.Text = val, net.ValidationAccuracy.ToString());
-            this.InvokeIfRequired(val => progress.Value = val, net.ValidationAccuracy/(1 - precision)*100);
         }
 
         private void cbPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)

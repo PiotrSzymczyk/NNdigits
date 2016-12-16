@@ -72,6 +72,8 @@ namespace Net
             {
                 Layers[i].ConenctToPreviousLayer(Layers[i-1], minWeight, maxWeight);
             }
+
+            ActivationList = new double[numOfHiddenLayerNeurons];
         }
 
         private void ResetActivation()
@@ -89,23 +91,6 @@ namespace Net
         {
             this.SetInput(inputs);
             this.Process();
-        }
-
-        public void Validate(IList<TrainingElement> testSet)
-        {
-            double hits = 0;
-            foreach (var test in testSet)
-            {
-                this.SetInput(test.Input);
-                this.Process();
-                bool same = true;
-                for (int i = 0; i < OutputLayer.Neurons.Count; i++)
-                {
-                    if (Math.Abs(OutputLayer.Neurons[i].Output - test.ExpectedOutput[i]) > 0.2) same = false;
-                }
-                if (same) hits++;
-            }
-            this. ValidationAccuracy = hits/testSet.Count;
         }
 
         public void Learn(IList<TrainingElement> trainingSet)
@@ -151,7 +136,7 @@ namespace Net
 
         private void UpdateActivation()
         {
-            for (int i = 0; i < HiddenLayers.First().Neurons.Count; i++)
+            for (int i = 0; i < ActivationList.Length; i++)
             {
                 if (HiddenLayers.First().Neurons[i].Output > ActivationThereshold)
                 {

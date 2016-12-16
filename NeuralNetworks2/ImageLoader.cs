@@ -82,7 +82,7 @@ namespace NeuralNetworks2
             {
                 for (int x = 0; x < bmp.Width; x++)
                 {
-                    result[bmp.Width * y + x] = (byte) (bmp.GetPixel(x, y).R < 196 ? 0 : 1);
+                    result[bmp.Width * y + x] = (byte) (bmp.GetPixel(x, y).R < 196 ? 1 : 0);
                 }
             }
             return result;
@@ -109,13 +109,12 @@ namespace NeuralNetworks2
 
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
-            int j = -1;
+            int padding = bmp.Width%4;
             for (int counter = 0; counter < imageData.Length; counter++)
             {
-                if (counter % bmp.Width == 0) j++;
-                rgbValues[3*(counter + j)] = imageData[counter];
-                rgbValues[3*(counter + j) + 1] = imageData[counter];
-                rgbValues[3*(counter + j) + 2] = imageData[counter];
+                rgbValues[counter/bmp.Width*padding+3*counter] = imageData[counter];
+                rgbValues[counter / bmp.Width * padding + 3 *counter + 1] = imageData[counter];
+                rgbValues[counter / bmp.Width * padding + 3 *counter + 2] = imageData[counter];
             }
 
             // Copy the RGB values back to the bitmap
