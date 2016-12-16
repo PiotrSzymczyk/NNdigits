@@ -145,7 +145,7 @@ namespace NeuralNetworks2
 
         private void bProcess_Click(object sender, RoutedEventArgs e)
         {
-            var input = inputBoard.Select(val => val ? (byte) 1 : (byte) 0).ToList();
+            var input = inputBoard.Select(val => val ? 1d : 0d).ToList();
             net.Process(input);
             output.Source = ImageLoader.ToBitmapImage(ImageLoader.ParseVectorToImage(net.OutputLayer.Neurons.Select(neuron => (byte)(neuron.Output*255)).ToArray()));
         }

@@ -58,31 +58,31 @@ namespace NeuralNetworks2
             return images.ToList();
         }
 
-        private static IList<byte> ParseNameToExpectedResult(string name, int numberOfResultCategories)
+        private static IList<double> ParseNameToExpectedResult(string name, int numberOfResultCategories)
         {
             var value = name[0].ToInt();
-            var result = new List<byte>();
+            var result = new List<double>();
             for (int i = 0; i < numberOfResultCategories; i++)
             {
-                result.Add(value == i ? (byte) 1 : (byte) 0);
+                result.Add(value == i ? 1 : 0);
             }
             return result;
         }
         
-        public static IList<byte> ParseImageToVector(Bitmap bmp)
+        public static IList<double> ParseImageToVector(Bitmap bmp)
         {
             return BitmapToByteArray(bmp).ToList();
         }
 
-        public static byte[] BitmapToByteArray(Bitmap bmp)
+        public static double[] BitmapToByteArray(Bitmap bmp)
         {
-            var result = new byte[bmp.Width * bmp.Height];
+            var result = new double[bmp.Width * bmp.Height];
 
             for (int y = 0; y < bmp.Height; y++)
             {
                 for (int x = 0; x < bmp.Width; x++)
                 {
-                    result[bmp.Width * y + x] = (byte) (bmp.GetPixel(x, y).R < 196 ? 1 : 0);
+                    result[bmp.Width * y + x] = (double)(255 - bmp.GetPixel(x, y).R) / 255;
                 }
             }
             return result;

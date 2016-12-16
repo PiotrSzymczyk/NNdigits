@@ -87,7 +87,7 @@ namespace Net
         {
         }
 
-        public void Process(IList<byte> inputs)
+        public void Process(IList<double> inputs)
         {
             this.SetInput(inputs);
             this.Process();
@@ -152,7 +152,7 @@ namespace Net
             this.UpdateNetwork(trainingElement.ExpectedOutput);
         }
 
-        private void SetInput(IEnumerable<byte> input)
+        private void SetInput(IEnumerable<double> input)
         {
             if (input.Count() != InputLayer.Count)
                 throw new Exception("Input vector size does not match network input dimension!");
@@ -179,7 +179,7 @@ namespace Net
             }
         }
 
-        private void UpdateNetwork(IList<byte> expectedResult)
+        private void UpdateNetwork(IList<double> expectedResult)
         {
             this.SetOutputLayerNeuronsErrors(expectedResult);
             this.SetHiddenLayerNeuronsErrors();
@@ -187,7 +187,7 @@ namespace Net
             this.totalNetworkError += CurrNetworkError;
         }
 
-        private void SetOutputLayerNeuronsErrors(IList<byte> expectedResult)
+        private void SetOutputLayerNeuronsErrors(IList<double> expectedResult)
         {
             for (int i = 0; i < expectedResult.Count; i++)
             {
@@ -205,8 +205,8 @@ namespace Net
                     var deltaSum = layer.Neurons[i].OutConnections.Sum(connection 
                         => connection.Destination.Error * connection.Weight.Value);
 
-                    layer.Neurons[i].Error = GetDerivative(layer.Neurons[i]) * (deltaSum
-                        + SparsityCoefficient * ( (1 - AverageActivation) / (1 - ActivationList[i]) - AverageActivation / ActivationList[i]));
+                    layer.Neurons[i].Error = GetDerivative(layer.Neurons[i])*(deltaSum);
+                      //  + SparsityCoefficient * ( (1 - AverageActivation) / (1 - ActivationList[i]) - AverageActivation / ActivationList[i]));
                 }
             }
         }
