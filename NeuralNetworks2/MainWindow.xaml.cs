@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace NeuralNetworks2
         private NeuralNetwork net;
         private bool paused = false;
         private bool isRunning = false;
+        private Stopwatch stopwatch = new Stopwatch();
 
         public IList<ITransferFunction> TransferFunctions { get; set; } = new List<ITransferFunction>
         {
@@ -81,7 +83,7 @@ namespace NeuralNetworks2
                 var validationSet = ImageLoader.LoadTrainingElementsFromDirectory(this.testSet.Text,
                     int.Parse(tbOutputCount.Text));
                 var precision = double.Parse(tbPrecision.Text);
-
+                stopwatch.Restart();
                 await Task.Run(() =>
                 {
                     Teach(trainingSet, validationSet, precision);
@@ -95,12 +97,14 @@ namespace NeuralNetworks2
             }
             else if (paused)
             {
+                stopwatch.Start();
                 paused = false;
                 bProcess.IsEnabled = false;
                 bLearn.Content = "Pause";
             }
             else
             {
+                stopwatch.Stop();
                 paused = true;
                 bProcess.IsEnabled = true;
                 bLearn.Content = "Continue";
@@ -145,7 +149,7 @@ namespace NeuralNetworks2
             {
                 net.DoLearningEpoch(trainingSet.OrderBy(val => RandomGenerator.NextDouble()).ToList());
                 net.Validate(validationSet);
-                UpdateGUI(i, precision);
+                UpdateGUI(i, precision, stopwatch.Elapsed.Minutes*60 + stopwatch.Elapsed.Seconds);
 
                 if (net.ValidationAccuracy > (1-precision)*100)
                 {
@@ -163,11 +167,12 @@ namespace NeuralNetworks2
             net.DoLearningEpoch(trainingSet.OrderBy(val => RandomGenerator.NextDouble()).ToList());
         }
 
-        private void UpdateGUI(int numOfEpoch, double precision)
+        private void UpdateGUI(int numOfEpoch, double precision, long elapsedSeconds)
         {
             this.InvokeIfRequired(val => tbCurrentEpoch.Text = val.ToString(), numOfEpoch);
             this.InvokeIfRequired(val => tbTotalNetworkError.Text = val, net.ValidationAccuracy.ToString());
             this.InvokeIfRequired(val => progress.Value = val, net.ValidationAccuracy/(1 - precision)*100);
+            this.InvokeIfRequired(val => tbTime.Text = val.ToString(), (double)numOfEpoch/Math.Max(elapsedSeconds,1));
         }
 
         private void cbPattern_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -139,12 +139,14 @@
             <TextBox x:Name="tbMomentum" HorizontalAlignment="Left" Height="23" Margin="456,197,0,0" TextWrapping="Wrap" Text="0,2" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" TextChanged="tbMomentum_TextChanged"/>
             <Label x:Name="label1_Copy9" Content="Current epoch" HorizontalAlignment="Left" Margin="42,330,0,0" VerticalAlignment="Top" Width="110"/>
             <TextBox x:Name="tbCurrentEpoch" HorizontalAlignment="Left" Height="23" Margin="161,332,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" IsReadOnly="True" IsEnabled="False"/>
-            <Label x:Name="label1_Copy10" Content="Validation set accuracy:" HorizontalAlignment="Left" Margin="314,330,0,0" VerticalAlignment="Top" Width="133"/>
-            <TextBox x:Name="tbTotalNetworkError" HorizontalAlignment="Left" Height="23" Margin="456,332,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" IsReadOnly="True" IsEnabled="False"/>
+            <Label x:Name="label1_Copy10" Content="Validation set accuracy:" HorizontalAlignment="Left" Margin="241,331,0,0" VerticalAlignment="Top" Width="133"/>
+            <TextBox x:Name="tbTotalNetworkError" HorizontalAlignment="Left" Height="23" Margin="383,333,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right" IsReadOnly="True" IsEnabled="False"/>
             <Label x:Name="label1_Copy11" Content="Searched accuracy" HorizontalAlignment="Left" Margin="42,193,0,0" VerticalAlignment="Top" Width="110"/>
             <TextBox x:Name="tbPrecision" HorizontalAlignment="Left" Height="23" Margin="161,197,0,0" TextWrapping="Wrap" Text="0,15" VerticalAlignment="Top" Width="42" RenderTransformOrigin="0.525,0" TextAlignment="Right"/>
             <ProgressBar x:Name="progress" HorizontalAlignment="Left" Height="10" Margin="39,301,0,0" VerticalAlignment="Top" Width="459" Foreground="#FF1BC33A"/>
             <Button x:Name="bReset" Content="Reset" HorizontalAlignment="Left" Height="41" Margin="513,270,0,0" VerticalAlignment="Top" Width="101" Click="bReset_Click"/>
+            <TextBox x:Name="tbTime" HorizontalAlignment="Left" Height="23" Margin="535,332,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="51" IsEnabled="False" TextAlignment="Right"/>
+            <Label x:Name="label1_Copy13" Content="Efiiciency" HorizontalAlignment="Left" Margin="461,330,0,0" VerticalAlignment="Top" Width="57"/>
         </Grid>
         <Grid Grid.Column="6" HorizontalAlignment="Left" Height="110" Margin="72,0,-652,-10" Grid.Row="8" Grid.RowSpan="2" VerticalAlignment="Top" Width="630">
             <Grid.ColumnDefinitions>
