@@ -103,9 +103,9 @@
         <Grid Grid.Column="6" HorizontalAlignment="Left" Height="376" Margin="72,0,-652,0" Grid.RowSpan="8" VerticalAlignment="Top" Width="630">
             <Frame x:Name="frame" Content=" Learning" HorizontalAlignment="Left" Width="630" BorderThickness="1,2" BorderBrush="Black" Margin="0,10" FontWeight="ExtraBlack" FontSize="18"/>
             <Label x:Name="label" Content="Learnig set dir:" HorizontalAlignment="Left" Margin="19,37,0,0" VerticalAlignment="Top" Width="100"/>
-            <TextBox x:Name="trainingSet" HorizontalAlignment="Left" Height="23" Margin="138,39,0,0" TextWrapping="Wrap" Text="LearningSet" VerticalAlignment="Top" Width="476"/>
+            <TextBox x:Name="trainingSet" HorizontalAlignment="Left" Height="23" Margin="138,39,0,0" TextWrapping="Wrap" Text="..\..\..\LearningSet" VerticalAlignment="Top" Width="476"/>
             <Label x:Name="label1" Content="Validation set dir:" HorizontalAlignment="Left" Margin="19,69,0,0" VerticalAlignment="Top" Width="100"/>
-            <TextBox x:Name="testSet" HorizontalAlignment="Left" Height="23" Margin="138,71,0,0" TextWrapping="Wrap" Text="ValidationSet" VerticalAlignment="Top" Width="476"/>
+            <TextBox x:Name="testSet" HorizontalAlignment="Left" Height="23" Margin="138,71,0,0" TextWrapping="Wrap" Text="..\..\..\ValidationSet" VerticalAlignment="Top" Width="476"/>
             <Button x:Name="bLearn" Content="Learn" Margin="39,270,132,0" VerticalAlignment="Top" Click="bLearn_Click" Height="31">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">

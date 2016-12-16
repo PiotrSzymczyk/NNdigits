@@ -17,7 +17,7 @@ namespace NeuralNetworks2
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const string PatternsPath = "C:\\Users\\piotrek\\Documents\\Visual Studio 2015\\Projects\\NeuralNetworks2\\Patterns\\";
+        private const string PatternsPath = "..\\..\\..\\Patterns\\";
         private bool[] inputBoard;
         private NeuralNetwork net;
         private bool paused = false;
